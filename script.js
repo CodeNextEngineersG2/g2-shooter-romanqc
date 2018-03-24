@@ -41,10 +41,80 @@ var alienBulletY;
  */
 function setup(){
   canvas = createCanvas(500,500);
-  background(100,30,40);
   gameScreen = select("#game-screen");
   canvas.parent(gameScreen);
+  shipColor = "#000000";
+  shipDiameter = 80;
+  shipX = width/2;
+  shipY = height - 40;
+  shipSpeed = 6;
+  shipShooting = false;
 }
+
+function draw(){
+  background("#3A5848");
+  noStroke();
+  theToaster();
+  theToast();
+}
+
+function theToaster(){
+  if(keyIsDown(LEFT_ARROW)){
+    shipX -= shipSpeed;
+  }else if(keyIsDown(RIGHT_ARROW)){
+    shipX += shipSpeed;
+  }
+  if(keyIsDown(UP_ARROW)){
+    shipY -= shipSpeed;
+  }
+  fill(60,60,60);
+  rect(shipX-25,shipY,50,60);
+  //toaster Handle
+  fill(100,100,100);
+  rect(shipX+25,shipY+10,10,5);
+  //
+  fill(120,120,120);
+  rect(shipX-25,shipY,50,10);
+  fill(0);
+  rect(shipX-22.5,shipY,45,5);
+  fill("#ff0000");
+  ellipse(shipX-10,shipY+20,10,10);
+  fill("#00ff00");
+  ellipse(shipX+10,shipY+20,10,10);
+
+  if(shipX <= 25){
+    shipX += 6;
+  }
+  if(shipX >= width-25){
+    shipX -= 6;
+  }
+  if(shipY <= width-60){
+    shipY += 30;
+  }
+}
+
+function keyPressed(){
+  if(keyCode === 32 && !shipShooting){
+    bulletX = shipX+25;
+    bulletY = shipY;
+    shipShooting = true;
+  }
+}
+
+function theToast(){
+  if(bulletY > 0){
+    fill("#dF942F");
+    rect(bulletX-42.5, bulletY-17, 35, 20,8);
+    ellipse(bulletX-37,bulletY-16,17,17);
+    ellipse(bulletX-13,bulletY-16,17,17);
+  if(bulletY >= 0){
+    bulletY -= 9;
+  }
+}else {
+  shipShooting = false;
+}
+}
+
 
 /*
  * gameOver()
