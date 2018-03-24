@@ -49,13 +49,21 @@ function setup(){
   shipY = height - 40;
   shipSpeed = 6;
   shipShooting = false;
+  alienX = 0;
+  alienY = 0;
+  alienVelocity = 8;
+  alienBulletDiameter = 20;
+  alienShooting = false;
+
 }
 
 function draw(){
   background("#3A5848");
   noStroke();
+///////////////////////////
   theToaster();
   theToast();
+  theAlien();
 }
 
 function theToaster(){
@@ -110,12 +118,57 @@ function theToast(){
   if(bulletY >= 0){
     bulletY -= 9;
   }
-}else {
-  shipShooting = false;
+  }else {
+    shipShooting = false;
+  }
 }
+
+function theAlien(){
+    alienX += alienVelocity;
+   if(alienX >= width-55 || alienX < 0){
+    alienVelocity *= -1;
+  }
+  fill("#FCFF00");
+  rect(alienX,alienY,55,55,10);
+  if(random(4) < 1 && !alienShooting) {
+    alienBulletY = alienY;
+    alienBulletX = alienX;
+    alienShooting = true;
+  }
+}
+
+function darwAlienBullet() {
+  //var hitAlien = checkCollision(alienX, alienY, alienDiameter, bullet )
+  if(alienBulletY < height){
+    if(bulletY > 0 && !hitAlien)
+    fill(0,255,255);
+    noStorke();
+    ellipse(alienBulletX, alienBulletY, alienBulletDiameter, alienBulletDiameter);
+    alienBulletY += 10;
+  }else if(hitAlien){
+    resetAlien();
+    alienVelocity++;
+    alienShooting = false;
+  }
+}
+
+function resetAlien(){
+  alienX = 0;
+  alienY = 0;
+  alienVelocity = abs(alienVelocity);
 }
 
 
+
+function checkCollision(aX,aY,aD,bX,bY,bD){
+  distance = dist(aX, aY, bX, bY);
+  if(distance <= ((aD + bD)/ 2)){
+    return true;
+  }else{
+    return false;
+  }
+
+}
 /*
  * gameOver()
  * This function stops the game from running and shows an alert telling the
